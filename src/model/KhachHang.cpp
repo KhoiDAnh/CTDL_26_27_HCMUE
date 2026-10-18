@@ -12,10 +12,6 @@
 
 namespace {
     const std::size_t idLength = 12;
-
-    bool isAllDigits(const std::string& text) {
-        return text.find_first_not_of("0123456789") == std::string::npos;
-    }
 }
 
 // yeu cau oop
@@ -33,7 +29,7 @@ const std::string& KhachHang::getFullName() const {
 
 void KhachHang::validateIDNumber(const std::string& idNumber) {
     // id size check
-    if (idNumber.size() != idLength || !isAllDigits(idNumber)) {
+    if (idNumber.size() != idLength || !StringUtils::isAllDigits(idNumber)) {
         throw std::invalid_argument("KhachHang: CMND phai chinh xac 12 chu so.");
     }
 }

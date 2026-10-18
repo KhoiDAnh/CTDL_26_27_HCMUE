@@ -3,8 +3,10 @@
 #include <string>
 
 #include "model/KhachHang.h"
+#include "model/Ve.h"
+#include "model/Date.h"
 
-void check(const std::string& line) {
+void checkKhachHang(const std::string& line) {
     try {
         KhachHang::fromLine(line);
         std::cout << "OK: " << line << '\n';
@@ -14,14 +16,28 @@ void check(const std::string& line) {
     }
 }
 
+void checkVe(const std::string& line) {
+    try {
+        const Ve ticket = Ve::fromLine(line);
+        std::cout << "OK : " << line << "   code=" << ticket.getCode()
+                  << "   roundtrip=" << (ticket.toLine() == line ? "yes" : "NO") << '\n';
+    }
+    catch (const std::invalid_argument& e) {
+        std::cout << "THROWS: " << line << " -> " << e.what() << '\n';
+    }
+}
+
+void checkDate(const std::string& line) {
+    try {
+        Date::fromString(line);
+        std::cout << "OK: " << line << '\n';
+    }
+    catch (const std::invalid_argument& e) {
+        std::cout << "THROWS: " << line << " -> " << e.what() << '\n';
+    }
+}
+
 int main() {
-    check("1|079203001234|Nguyen Van A");
-    check("1|079203001234|Nguyen|Van A");
-    check("1|07920300123|Nguyen Van A");
-    check("1|07920300123A|Nguyen Van A");
-    check("0|079203001234|Nguyen Van A");
-    check("x|079203001234|Nguyen Van A");
-    check("1|079203001234|   ");
-    check("1|079203001234");
+
     return 0;
 }

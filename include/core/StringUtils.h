@@ -50,4 +50,7 @@ namespace StringUtils {
         }
         return value;
     }
+    inline bool isAllDigits(const std::string& text) {
+        return text.find_first_not_of("0123456789") == std::string::npos;
+    }
 }
