@@ -27,6 +27,9 @@ public:
     // no setters, getters marked const
     std::string toLine() const;
     static KhachHang fromLine(const std::string& line);
+
+    static void validateIDNumber(const std::string& idNumber);
+    static void validateFullName(const std::string& fullName);
 };
 
 #endif //CTDL_26_27_HCMUE_KHACHHANG_H
