@@ -1,7 +1,3 @@
-//
-// Created by KHOI DO on 14/10/2026.
-//
-
 #pragma once
 
 #include <cstddef>

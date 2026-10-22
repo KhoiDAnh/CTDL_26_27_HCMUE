@@ -1,10 +1,3 @@
-//
-// Created by KHOI DO on 18/10/2026.
-//
-
-#ifndef CTDL_26_27_HCMUE_NGAY_H
-#define CTDL_26_27_HCMUE_NGAY_H
-
 #pragma once
 
 #include <string>
@@ -22,5 +15,3 @@ public:
     std::string toString() const;
     static Date fromString(const std::string& text);
 };
-
-#endif //CTDL_26_27_HCMUE_NGAY_H

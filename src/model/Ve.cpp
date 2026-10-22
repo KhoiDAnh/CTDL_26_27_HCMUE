@@ -10,14 +10,14 @@
 namespace {
     // banned words
     const char* const kBannedInFlightCode = "\\/:*\"<>| \t\r\n";
+}
 
-    void validateFlightCode(const std::string& flightCode) {
-        if (StringUtils::isBlank(flightCode)) {
-            throw std::invalid_argument("Ve: Ma chuyen bay khong duoc trong.");
-        }
-        if (flightCode.find_first_of(kBannedInFlightCode) != std::string::npos) {
-            throw std::invalid_argument("Ve: Ma chuyen bay chua ky tu khong hop le.");
-        }
+void Ve::validateFlightCode(const std::string& flightCode) {
+    if (StringUtils::isBlank(flightCode)) {
+        throw std::invalid_argument("Ve: Ma chuyen bay khong duoc trong.");
+    }
+    if (flightCode.find_first_of(kBannedInFlightCode) != std::string::npos) {
+        throw std::invalid_argument("Ve: Ma chuyen bay chua ky tu khong hop le.");
     }
 }
 

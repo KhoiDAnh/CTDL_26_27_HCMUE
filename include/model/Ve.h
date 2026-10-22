@@ -1,10 +1,3 @@
-//
-// Created by KHOI DO on 11/10/2026.
-//
-
-#ifndef CTDL_26_27_HCMUE_VE_H
-#define CTDL_26_27_HCMUE_VE_H
-
 #pragma once
 
 #include <string>
@@ -27,6 +20,5 @@ public:
 
     std::string toLine() const;
     static Ve fromLine(const std::string& line);
+    static void validateFlightCode(const std::string& flightCode);
 };
-
-#endif //CTDL_26_27_HCMUE_VE_H

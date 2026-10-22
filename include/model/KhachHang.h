@@ -1,10 +1,3 @@
-//
-// Created by KHOI DO on 11/10/2026.
-//
-
-#ifndef CTDL_26_27_HCMUE_KHACHHANG_H
-#define CTDL_26_27_HCMUE_KHACHHANG_H
-
 // constraints: order_ >= 1, idNumber_.size() = 12,
 // fullName_ not blank && no |
 
@@ -31,5 +24,3 @@ public:
     static void validateIDNumber(const std::string& idNumber);
     static void validateFullName(const std::string& fullName);
 };
-
-#endif //CTDL_26_27_HCMUE_KHACHHANG_H
