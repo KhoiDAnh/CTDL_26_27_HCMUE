@@ -1,10 +1,4 @@
-//
-// Created by KHOI DO on 11/10/2026.
-//
-
-#ifndef CTDL_26_27_HCMUE_KHACHHANG_H
-#define CTDL_26_27_HCMUE_KHACHHANG_H
-
+// KhachHang.h
 // constraints: order_ >= 1, idNumber_.size() = 12,
 // fullName_ not blank && no |
 
@@ -27,6 +21,7 @@ public:
     // no setters, getters marked const
     std::string toLine() const;
     static KhachHang fromLine(const std::string& line);
-};
 
-#endif //CTDL_26_27_HCMUE_KHACHHANG_H
+    static void validateIDNumber(const std::string& idNumber);
+    static void validateFullName(const std::string& fullName);
+};

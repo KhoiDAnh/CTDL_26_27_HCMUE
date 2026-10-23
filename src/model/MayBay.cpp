@@ -1,7 +1,4 @@
-//
-// Created by KHOI DO on 13/10/2026.
-//
-
+// MayBay.cpp
 #include "model/MayBay.h"
 
 #include <cstddef>
