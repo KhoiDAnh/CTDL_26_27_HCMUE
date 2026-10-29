@@ -5,7 +5,6 @@
 
 #include "model/Date.h"
 #include "model/Ve.h"
-#include "core/StringUtils.h"
 #include "core/LinkedList.h"
 
 class ChuyenBay {
@@ -24,6 +23,8 @@ private:
 public:
     // named constants
     enum class Status { Cancelled = 0, Available = 1, SoldOut = 2, Completed = 3 };
+
+    // constructor
     ChuyenBay(const std::string& flightCode, const std::string& aircraftId,
                 const Date& departureDate, const std::string& destination,
                 int seatCount);

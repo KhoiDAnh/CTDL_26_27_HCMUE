@@ -8,17 +8,18 @@
 
 Admin::Admin(const std::string& username, const std::string& password)
     : username_(username), password_(password){
+    // username checks
     if (StringUtils::isBlank(username)) {
         throw std::invalid_argument("Admin: Ho ten khong duoc trong.");
     }
     if (username.find('|') != std::string::npos) {
         throw std::invalid_argument("Admin: Ho ten khong duoc chua dau '|'.");
     }
+
+    // password checks
     if (StringUtils::isBlank(password)) {
         throw std::invalid_argument("Admin: Mat khau khong duoc de trong.");
     }
-
-    // should or should not contain '|'?
     if (password.find('|') != std::string::npos) {
         throw std::invalid_argument("Admin: Mat khau khong duoc chua dau '|'.");
     }
