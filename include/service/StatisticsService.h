@@ -1,8 +1,29 @@
-//
-// Created by KHOI DO on 11/10/2026.
-//
+#ifndef STATISTICS_SERVICE_H
+#define STATISTICS_SERVICE_H
 
-#ifndef CTDL_26_27_HCMUE_STATISTICSSERVICE_H
-#define CTDL_26_27_HCMUE_STATISTICSSERVICE_H
+#include <string>
+#include "core/LinkedList.h"
+#include "model/ChuyenBay.h"
 
-#endif //CTDL_26_27_HCMUE_STATISTICSSERVICE_H
+class StatisticsService {
+public:
+    /**************************************************************
+     * @Description Hiển thị danh sách khách hàng của một chuyến bay
+     * @param strFlightCode Mã chuyến bay cần tìm
+     **************************************************************/
+    void showPassengersOfFlight(const std::string& strFlightCode, const LinkedList<ChuyenBay>& flightList);
+
+    /**************************************************************
+     * @Description Hiển thị danh sách ghế còn trống của một chuyến bay
+     * @param strFlightCode Mã chuyến bay cần tìm
+     **************************************************************/
+    void showAvailableSeats(const std::string& strFlightCode, const LinkedList<ChuyenBay>& flightList);
+
+    /**************************************************************
+     * @Description Thống kê số lượng chuyến bay của một máy bay
+     * @param strAircraftId Số hiệu máy bay (VD: VN-A123)
+     **************************************************************/
+    void countFlightsOfAircraft(const std::string& strAircraftId, const LinkedList<ChuyenBay>& flightList);
+};
+
+#endif // STATISTICS_SERVICE_H
