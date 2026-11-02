@@ -40,6 +40,7 @@ public:
     T& at(std::size_t index);
     const T& at(std::size_t index) const;
     void removeAt(std::size_t index);
+    void insertAt(std::size_t index, const T& value);
 };
 // child Node methods in LList
 template <typename T>
@@ -80,7 +81,6 @@ LinkedList<T>::LinkedList(const LinkedList& other)
 
 template <typename T>
 LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other) {
-
     // 1. Self assigment guard
     if (this == &other) {
         return *this;
@@ -163,4 +163,34 @@ void LinkedList<T>::removeAt(std::size_t index) {
         delete target;
     }
     --size_;
+}
+
+template <typename T>
+void LinkedList<T>::insertAt(std::size_t index, const T& value) {
+    if (index > size_) {
+        throw std::out_of_range("index out of range");
+    }
+
+    // case 1: index == size_
+    if (index == size_) {
+        pushBack(value);
+        return;
+    }
+
+    // case 2: index == 0
+    if (index == 0) {
+        // list never empty -> tail_ doesnt change
+        Node* newNode = new Node(value);
+        newNode->next = head_;
+        head_ = newNode;
+        ++size_;
+        return;
+    }
+
+    // case 3: otherwise (in the middle)
+    Node* current = nodeAt(index - 1);
+    Node* newNode = new Node(value);
+    newNode->next = current->next;
+    current->next = newNode;
+    ++size_;
 }
