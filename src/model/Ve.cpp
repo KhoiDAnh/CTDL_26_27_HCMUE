@@ -51,8 +51,12 @@ const std::string& Ve::getFullName() const {
     return fullName_;
 }
 
+std::string Ve::makeCode(const std::string& flightCode, int seatNumber) {
+    return flightCode + "-" + std::to_string(seatNumber);
+}
+
 std::string Ve::getCode() const {
-    return flightCode_ + "-" + std::to_string(seatNumber_);
+    return makeCode(flightCode_, seatNumber_);
 }
 
 std::string Ve::toLine() const {

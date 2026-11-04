@@ -22,4 +22,5 @@ public:
     std::string toLine() const;
     static Ve fromLine(const std::string& line);
     static void validateFlightCode(const std::string& flightCode);
+    static std::string makeCode(const std::string& flightCode, int seatNumber);
 };

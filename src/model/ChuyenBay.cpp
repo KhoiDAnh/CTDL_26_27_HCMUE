@@ -177,7 +177,7 @@ Ve ChuyenBay::bookSeat(int seat, const std::string& idNumber,
 }
 
 void ChuyenBay::restoreTicket(const Ve& ticket) {
-    // no status checks on purpose: completed && cancelled flights must reload their tickets
+    // no status checks on purpose: completed && cancelled flights must reload their tickets.txt
     place(ticket);
 }
 
