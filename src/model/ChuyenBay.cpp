@@ -25,10 +25,10 @@ ChuyenBay::ChuyenBay(const std::string &flightCode,
 
     // 2. validate aircraftId
     if (StringUtils::isBlank(aircraftId)) {
-        throw std::invalid_argument("ChuyenBay: Ma chuyen bay khong duoc trong.");
+        throw std::invalid_argument("ChuyenBay: So hieu may bay khong duoc trong.");
     }
     if (aircraftId.find('|') != std::string::npos) {
-        throw std::invalid_argument("ChuyenBay: Ma chuyen bay chua ky tu khong hop le.");
+        throw std::invalid_argument("ChuyenBay: So hieu may bay chua ky tu khong hop le.");
     }
 
     // 3. validate destination
@@ -109,7 +109,7 @@ void ChuyenBay::markCompleted() {
     // "Open": cancelled_ || completed_
     // 1. If not open -> throw error
     if (cancelled_ || completed_) {
-        throw std::invalid_argument("ChuyenBay: Chuyen bay da huy hoac da hoan thanh, khong the huy.");
+        throw std::invalid_argument("ChuyenBay: Chuyen bay da huy hoac da hoan thanh, khong the danh dau hoan thanh.");
     }
 
     // 2. else set completed_
