@@ -16,10 +16,10 @@
 MayBay::MayBay(const std::string& id, int seatCount)
     : id_(id), seatCount_(seatCount) {
     if (StringUtils::isBlank(id)) {
-        throw std::invalid_argument("MayBay: ID MayBay khong duoc trong.");
+        throw std::invalid_argument("MayBay: Ma may bay khong duoc trong.");
     }
     if (id.find('|') != std::string::npos) {
-        throw std::invalid_argument("MayBay: ID MayBay khong duoc co dau '|'.");
+        throw std::invalid_argument("MayBay: Ma may bay khong duoc co dau '|'.");
     }
     if (seatCount <= 0) {
         throw std::invalid_argument("MayBay: So luong ghe phai > 0.");
@@ -43,7 +43,7 @@ MayBay MayBay::fromLine(const std::string& line) {
     // MayBay (string id_, int seatCnt)
     std::string fields[2];
     if (!StringUtils::splitExact(line, '|', fields, 2)) {
-        throw std::invalid_argument("MayBay: line phai co it nhat 2 vung du lieu.");
+        throw std::invalid_argument("MayBay: Chuoi phai co dung 2 vung du lieu.");
     }
     return MayBay{fields[0], StringUtils::parseInt(fields[1])};
 }

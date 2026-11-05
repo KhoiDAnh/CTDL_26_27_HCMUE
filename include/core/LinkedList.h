@@ -41,6 +41,10 @@ public:
     const T& at(std::size_t index) const;
     void removeAt(std::size_t index);
     void insertAt(std::size_t index, const T& value);
+    void pushFront(const T& value);
+    void popFront();
+    T& front();
+    const T& front() const;
 };
 // child Node methods in LList
 template <typename T>
@@ -54,7 +58,50 @@ typename LinkedList<T>::Node* LinkedList<T>::nodeAt(std::size_t index) const {
     }
     return current;
 }
+template <typename T>
+T& LinkedList<T>::front() {
+    if (isEmpty()) {
+        throw std::out_of_range("List is empty");
+    }
 
+    return head_->data;
+}
+template <typename T>
+void LinkedList<T>::pushFront(const T& value) {
+    Node* newNode = new Node(value);
+    newNode->next = head_;
+    head_ = newNode;
+
+    if (tail_ == nullptr) {
+        tail_ = newNode;
+    }
+
+    ++size_;
+}
+template <typename T>
+void LinkedList<T>::popFront() {
+    if (isEmpty()) {
+        throw std::out_of_range("List is empty");
+    }
+
+    Node* oldHead = head_;
+    head_ = head_->next;
+    delete oldHead;
+
+    --size_;
+
+    if (head_ == nullptr) {
+        tail_ = nullptr;
+    }
+}
+template <typename T>
+const T& LinkedList<T>::front() const {
+    if (isEmpty()) {
+        throw std::out_of_range("List is empty");
+    }
+
+    return head_->data;
+}
 template <typename T>
 void LinkedList<T>::clear() {
     Node* current = head_;
