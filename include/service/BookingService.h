@@ -11,7 +11,17 @@
 class BookingService {
 private:
     DataStore& store_;
+    bool removeWaitingCustomer(const std::string& idNumber) {
+        const LinkedList<KhachHang>& customers = store_.getCustomers();
 
+        for (std::size_t i = 0; i < customers.size(); ++i) {
+            if (customers.at(i).getIdNumber() == idNumber) {
+                return false;
+            }
+        }
+
+        return false;
+    }
 public:
     explicit BookingService(DataStore& store)
         : store_(store) {}
@@ -36,6 +46,8 @@ public:
 
         if (customer == nullptr) {
             throw std::invalid_argument(
+                "[BookingService.h - bookTicket()] "
+                "Khong tim thay khach hang: " + idNumber
             );
         }
 
@@ -46,13 +58,15 @@ public:
 
         if (flight == nullptr) {
             throw std::invalid_argument(
-                "Khong tim thay chuyen bay."
+                "[BookingService.h - bookTicket()] "
+                "Khong tim thay chuyen bay: " + flightCode
             );
         }
 
         if (!flight->isBookable()) {
             throw std::invalid_argument(
-                "Chuyen bay khong the dat ve."
+                "[BookingService.h - bookTicket()] "
+                "Chuyen bay khong the dat ve: " + flightCode
             );
         }
 
@@ -65,10 +79,14 @@ public:
         try {
             store_.saveTicket(ticket);
         }
-        catch (...) {
+        catch (const std::exception& e) {
             flight->releaseSeat(seatNumber);
-            throw;
-        }
+
+        throw std::runtime_error(
+            "[BookingService.h - bookTicket()] "
+            "Loi khi luu ve: " + std::string(e.what())
+        );
+}
 
         try {
             if (!store_.removeWaitingCustomer(customerId)) {
@@ -101,12 +119,14 @@ public:
 
         if (flight == nullptr) {
             throw std::invalid_argument(
-                "Khong tim thay chuyen bay."
+                "[BookingService.h - returnTicket()] "
+                "Khong tim thay chuyen bay: " + flightCode
             );
         }
 
         if (flight->getStatus() == ChuyenBay::Status::Completed) {
             throw std::invalid_argument(
+                "[BookingService.h - returnTicket()] "
                 "Chuyen bay da hoan tat, khong the tra ve."
             );
         }
@@ -124,7 +144,9 @@ public:
 
         if (foundTicket == nullptr) {
             throw std::invalid_argument(
-                "Khong tim thay ve o so ghe nay."
+                "[BookingService.h - returnTicket()] "
+                "Khong tim thay ve o so ghe: " +
+                std::to_string(seatNumber)
             );
         }
 
@@ -144,4 +166,4 @@ public:
     }
 };
 
-#endif
+#endif 
