@@ -3,6 +3,7 @@
 #include <string>
 
 #include "core/LinkedList.h"
+#include "core/Queue.h"
 #include "model/Admin.h"
 #include "model/ChuyenBay.h"
 #include "model/KhachHang.h"
@@ -18,7 +19,7 @@ private:
     LinkedList<MayBay> aircraft_;
     LinkedList<ChuyenBay> flights_;
     LinkedList<Admin> admins_;
-    LinkedList<KhachHang> customers_;
+    Queue<KhachHang> customers_;
 public:
     explicit DataStore(const std::string& dataDir);
 
@@ -27,7 +28,8 @@ public:
     const LinkedList<MayBay>& getAircraft() const;
     const LinkedList<ChuyenBay>& getFlights() const;
     const LinkedList<Admin>& getAdmins() const;
-    const LinkedList<KhachHang>& getCustomers() const;
+    const Queue<KhachHang>& getCustomers() const;
+    Queue<KhachHang>& waitingQueue();
 
     ChuyenBay* findFlight(const std::string& flightCode);
     const ChuyenBay* findFlight(const std::string& flightCode) const;
@@ -36,4 +38,5 @@ public:
     void saveTicket(const Ve& ticket) const;
     void deleteTicket(const std::string& ticketCode) const;
     void saveFlights() const;
+    void saveCustomers() const;
 };

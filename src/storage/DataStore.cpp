@@ -6,6 +6,7 @@
 
 #include "core/StringUtils.h"
 #include "storage/FileRepository.h"
+#include "storage/Directory.h"
 
 namespace {
     const char* const kAircraftFile = "MayBay.txt";
@@ -22,6 +23,19 @@ namespace {
             }
         }
         return nullptr;
+    }
+
+    ChuyenBay* findFlightIn(LinkedList<ChuyenBay>& list, const std::string& code) {
+        for (std::size_t i = 0; i < list.size(); ++i) {
+            if (list.at(i).getFlightCode() == code) {
+                return &list.at(i);
+            }
+        }
+        return nullptr;
+    }
+
+    bool hasTxtSuffix(const std::string& name) {
+        return name.size() > 4 && name.compare(name.size() - 4, 4, ".txt") == 0;
     }
 } // namespace
 
@@ -79,12 +93,13 @@ void DataStore::load() {
             [] (const Admin& admin)
             { return admin.getUsername(); });
 
-    const LinkedList<KhachHang> customers =
-        FileRepository<KhachHang>::loadAll(
-            dataDir_ + kCustomerFile,
-            &KhachHang::fromLine,
-            [] (const KhachHang& customer)
-            { return std::to_string(customer.getOrder()); });
+    const LinkedList<KhachHang> customerRows = FileRepository<KhachHang>::loadAll(
+    dataDir_ + kCustomerFile, &KhachHang::fromLine,
+    [](const KhachHang& customer) { return std::to_string(customer.getOrder()); });
+    Queue<KhachHang> customers;
+    for (std::size_t i = 0; i < customerRows.size(); ++i) {
+        customers.enqueue(customerRows.at(i));
+    }
 
     // 5. if nothing above throws, replace the members
     aircraft_ = aircraft;
@@ -92,34 +107,30 @@ void DataStore::load() {
     customers_ = customers;
     admins_ = admins;
 }
-
 void DataStore::loadTickets(LinkedList<ChuyenBay>& flights) const {
-    // Note: a ticket file for a seat > seatCount || flight no longer exists
-    // -> never probed, ignored silently
+    const std::string folder = dataDir_ + kTicketFolder;
+    const LinkedList<std::string> names = Directory::listFiles(folder);
 
-    for (std::size_t i = 0; i < flights.size(); ++i) {
-        ChuyenBay& flight = flights.at(i);
+    for (std::size_t i = 0; i < names.size(); ++i) {
+        const std::string& name = names.at(i);
+        if (!hasTxtSuffix(name)) {
+            continue;  // .gitkeep, ".", ".." and anything that is not a ticket
+        }
+        const std::string path = folder + name;
+        const Ve ticket = FileRepository<Ve>::loadOne(path, &Ve::fromLine);
 
-        for (int seat = 1; i <= flight.getSeatCount(); ++seat) {
-            const std::string path =
-                ticketPath(Ve::makeCode(flight.getFlightCode(), seat));
-            if (!FileRepository<Ve>::exists(path)) {
-                 continue; // ~no ticket for this seat
+        try {
+            if (name != ticket.getCode() + ".txt") {
+                throw std::invalid_argument("ten file khong khop ma ve " + ticket.getCode());
             }
-
-            const Ve ticket = FileRepository<Ve>::loadOne(path, &Ve::fromLine);
-
-            try {
-                if (ticket.getSeatNumber() != seat) {
-                    throw std::invalid_argument(
-                        "DataStore: Ten file ghi ghe + " + std::to_string(seat) +
-                        " nhung noi dung ghi ghe " +
-                        std::to_string(ticket.getSeatNumber()));
-                }
-                flight.restoreTicket(ticket);
-            } catch (const std::invalid_argument& e) {
-                throw std::invalid_argument("DataStore: " + path + ": " + e.what());
+            ChuyenBay* flight = findFlightIn(flights, ticket.getFlightCode());
+            if (flight == nullptr) {
+                throw std::invalid_argument("ve thuoc chuyen bay khong ton tai: " +
+                                            ticket.getFlightCode());
             }
+            flight->restoreTicket(ticket);
+        } catch (const std::invalid_argument& e) {
+            throw std::invalid_argument("DataStore: " + path + ": " + e.what());
         }
     }
 }
@@ -136,7 +147,11 @@ const LinkedList<Admin>& DataStore::getAdmins() const {
     return admins_;
 }
 
-const LinkedList<KhachHang>& DataStore::getCustomers() const {
+const Queue<KhachHang>& DataStore::getCustomers() const {
+    return customers_;
+}
+
+Queue<KhachHang>& DataStore::waitingQueue() {
     return customers_;
 }
 
@@ -173,4 +188,12 @@ void DataStore::deleteTicket(const std::string& ticketCode) const {
 
 void DataStore::saveFlights() const {
     FileRepository<ChuyenBay>::saveAll(dataDir_ + kFlightFile, flights_);
+}
+
+void DataStore::saveCustomers() const {
+    LinkedList<KhachHang> rows;
+    for (std::size_t i = 0; i < customers_.size(); ++i) {
+        rows.pushBack(customers_.at(i));
+    }
+    FileRepository<KhachHang>::saveAll(dataDir_ + kCustomerFile, rows);
 }

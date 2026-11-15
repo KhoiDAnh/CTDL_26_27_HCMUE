@@ -1,20 +1,20 @@
-#ifndef CTDL_26_27_HCMUE_QUEUE_H
-#define CTDL_26_27_HCMUE_QUEUE_H
+#pragma once
+
+#include <cstddef>
 
 #include "core/LinkedList.h"
 
+// First-in, first-out line built on LinkedList. Holds the waiting customers.
 template <typename T>
 class Queue {
 private:
     LinkedList<T> data_;
-
 public:
     void enqueue(const T& value);
     void dequeue();
-
     T& front();
     const T& front() const;
-
+    const T& at(std::size_t index) const;
     bool isEmpty() const;
     std::size_t size() const;
 };
@@ -26,17 +26,22 @@ void Queue<T>::enqueue(const T& value) {
 
 template <typename T>
 void Queue<T>::dequeue() {
-    data_.popFront();
+    data_.removeAt(0);  // throws std::out_of_range when empty
 }
 
 template <typename T>
 T& Queue<T>::front() {
-    return data_.front();
+    return data_.at(0);
 }
 
 template <typename T>
 const T& Queue<T>::front() const {
-    return data_.front();
+    return data_.at(0);
+}
+
+template <typename T>
+const T& Queue<T>::at(std::size_t index) const {
+    return data_.at(index);
 }
 
 template <typename T>
@@ -48,5 +53,3 @@ template <typename T>
 std::size_t Queue<T>::size() const {
     return data_.size();
 }
-
-#endif
