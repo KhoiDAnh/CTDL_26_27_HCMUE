@@ -65,7 +65,6 @@ App::App(const std::string& dataDir) : store_(dataDir), booking_(store_) {}
 int App::run() {
     try {
         store_.load();
-        std::cerr << "[debug] data loaded\n";
     } catch (const std::exception& e) {
         Console::println(" Khong the doc du lieu:", Color::Red);
         Console::println(std::string(" ") + e.what(), Color::Red);
@@ -329,7 +328,6 @@ void App::showFlightTable() {
     Console::println();
     Console::waitForKey();
 }
-
 void App::bookTicketScreen() {
     drawBanner("DAT VE");
     if (!hasBookableFlight(store_.getFlights())) {
@@ -337,35 +335,32 @@ void App::bookTicketScreen() {
     }
     drawFlightTable(true);
     Console::println();
-
-    ChuyenBay* flight = askBookableFlight();
-    if (flight == nullptr) {
-        showCancelled();
-        return;
-    }
-    Console::println();
-    drawFreeSeats(*flight);
+    Console::println(" Yeu cau cua ban se vao hang doi. Nhan vien se xu ly theo thu tu.",
+                     Color::Yellow);
     Console::println();
 
-    int seat = 0;
     std::string idNumber;
     std::string fullName;
-    if (!askSeat(*flight, seat) || !askIdNumber(idNumber) || !askFullName(fullName)) {
+    if (!askIdNumber(idNumber) || !askFullName(fullName)) {
         showCancelled();
         return;
     }
 
     Console::println();
-    Console::println(" Chuyen bay: " + flight->getFlightCode() + "   Ghe: " + std::to_string(seat));
     Console::println(" CMND: " + idNumber + "   Ho ten: " + fullName);
-    if (!askConfirm(" Xac nhan dat ve")) {
+    if (!askConfirm(" Xac nhan gui yeu cau dat ve")) {
         showCancelled();
         return;
     }
 
-    const Ve ticket = booking_.bookDirect(flight->getFlightCode(), seat, idNumber, fullName);
+    const KhachHang customer = booking_.requestTicket(idNumber, fullName);
     Console::println();
-    Console::println(" Dat ve thanh cong! Ma ve: " + ticket.getCode(), Color::Green);
+    Console::println(" Da ghi nhan yeu cau. So thu tu cua ban: " +
+                         std::to_string(customer.getOrder()),
+                     Color::Green);
+    Console::println(" Truoc ban con " + std::to_string(store_.getCustomers().size() - 1) +
+                     " khach hang dang cho.");
+    Console::println(" Vui long cho nhan vien xu ly de nhan ve.");
     Console::waitForKey();
 }
 

@@ -8,6 +8,19 @@
 #include "core/Queue.h"
 #include "model/KhachHang.h"
 
+namespace {
+
+bool hasBookableFlight(const LinkedList<ChuyenBay>& flights) {
+    for (std::size_t i = 0; i < flights.size(); ++i) {
+        if (flights.at(i).isBookable()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+}  // namespace
+
 BookingService::BookingService(DataStore& store) : store_(store) {}
 
 ChuyenBay& BookingService::requireFlight(const std::string& flightCode) {
@@ -42,10 +55,15 @@ Ve BookingService::issueTicket(ChuyenBay& flight, int seat,
     return ticket;
 }
 
-Ve BookingService::bookDirect(const std::string& flightCode, int seat,
-                              const std::string& idNumber,
-                              const std::string& fullName) {
-    return issueTicket(requireFlight(flightCode), seat, idNumber, fullName);
+KhachHang BookingService::requestTicket(const std::string& idNumber,
+                                        const std::string& fullName) {
+    if (!hasBookableFlight(store_.getFlights())) {
+        throw std::invalid_argument("Hien khong co chuyen bay nao con ve.");
+    }
+    // the constructor validates the ID and name before anything changes
+    const KhachHang customer(store_.nextCustomerOrder(), idNumber, fullName);
+    store_.enqueueCustomer(customer);
+    return customer;
 }
 
 Ve BookingService::bookNextWaiting(const std::string& flightCode, int seat) {

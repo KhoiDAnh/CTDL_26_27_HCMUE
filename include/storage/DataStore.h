@@ -39,4 +39,6 @@ public:
     void deleteTicket(const std::string& ticketCode) const;
     void saveFlights() const;
     void saveCustomers() const;
+    int nextCustomerOrder() const;
+    void enqueueCustomer(const KhachHang& customer);
 };

@@ -197,3 +197,26 @@ void DataStore::saveCustomers() const {
     }
     FileRepository<KhachHang>::saveAll(dataDir_ + kCustomerFile, rows);
 }
+
+int DataStore::nextCustomerOrder() const {
+    int highest = 0;
+    for (std::size_t i = 0; i < customers_.size(); ++i) {
+        if (customers_.at(i).getOrder() > highest) {
+            highest = customers_.at(i).getOrder();
+        }
+    }
+    return highest + 1;  // an empty queue starts again at 1
+}
+
+void DataStore::enqueueCustomer(const KhachHang& customer) {
+    // 1. write the new waiting list to disk FIRST. If this throws, memory is untouched.
+    LinkedList<KhachHang> rows;
+    for (std::size_t i = 0; i < customers_.size(); ++i) {
+        rows.pushBack(customers_.at(i));
+    }
+    rows.pushBack(customer);
+    FileRepository<KhachHang>::saveAll(dataDir_ + kCustomerFile, rows);
+
+    // 2. only then change the in-memory queue
+    customers_.enqueue(customer);
+}
